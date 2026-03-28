@@ -8,7 +8,7 @@
 
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-blue)](https://openclaw.ai)
 [![Python](https://img.shields.io/badge/Python-3.8+-green)](https://python.org)
-[![ClawHub](https://img.shields.io/badge/ClawHub-v0.3.0-purple)](https://clawhub.ai)
+[![ClawHub](https://img.shields.io/badge/ClawHub-v0.3.1-purple)](https://clawhub.ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 它是什么
@@ -24,7 +24,7 @@ L1 事实     ← 手动添加，每天积累
 ```
 
 <p align="center">
-  <img src="assets/architecture.svg" alt="Architecture — 三层渐进式披露" width="800"/>
+  <img src="assets/knowledge-graph.png" alt="Knowledge Graph" width="700"/>
 </p>
 
 每天把读到的、想到的、学到的拆成原子概念，系统自动帮你：
@@ -32,6 +32,36 @@ L1 事实     ← 手动添加，每天积累
 <p align="center">
   <img src="assets/features.svg" alt="Core Features" width="800"/>
 </p>
+
+## 架构 — 三层渐进式披露
+
+```mermaid
+graph TB
+    subgraph L1["🟢 LEVEL 1 — YAML 元数据 (~100 tokens)"]
+        A["name: knowledge-engine<br/>description: 个人知识引擎…<br/><b>✓ 始终加载</b>"]
+    end
+
+    subgraph L2["🟣 LEVEL 2 — SKILL.md 正文 (<5000 tokens)"]
+        B["什么时候用 → 使用指南 → CLI 命令<br/>search / add / link / beliefs-decay / synthesis / visualize<br/><b>触发时加载</b>"]
+    end
+
+    subgraph L3["🟡 LEVEL 3+ — 脚本 & 资源 (无限扩展)"]
+        C["📜 concept_manager.py (900+ 行)"]
+        D["🔬 concept_synthesis.py (蒸馏引擎)"]
+        E["🔌 ke_api.py (子 Agent API)"]
+        F["📊 visualize.py (D3.js 图谱)"]
+        G["📚 resources/ (Schema 文档)"]
+    end
+
+    L1 -->|触发时| L2
+    L2 -->|按需执行| L3
+
+    style L1 fill:#1e3a5f,stroke:#60a5fa,color:#fff
+    style L2 fill:#2d1f4e,stroke:#a78bfa,color:#fff
+    style L3 fill:#3a2a1e,stroke:#f59e0b,color:#fff
+```
+
+> Agent 只读 Level 1 + 2 · 脚本在外部执行 · 近似无限上下文
 
 ## 快速开始
 
@@ -108,7 +138,7 @@ Knowledge Engine 解决的就是这个问题：让知识**累积**而不是**消
 
 > **Harness（控制层）要为废弃而建，Knowledge（认知层）要为累积而建。**
 
-## 架构
+## 文件结构
 
 ```
 skills/knowledge-engine/
@@ -120,9 +150,13 @@ skills/knowledge-engine/
 │   ├── eval_knowledge_engine.py      ← 六项评估套件
 │   ├── visualize.py                  ← D3.js 交互式知识图谱
 │   └── viz-template.html             ← 可视化模板
-└── resources/
-    ├── concept-schema.md             ← 概念卡片 Schema
-    └── belief-schema.md              ← 信念卡片 Schema
+├── resources/
+│   ├── concept-schema.md             ← 概念卡片 Schema
+│   └── belief-schema.md              ← 信念卡片 Schema
+└── assets/
+    ├── hero.svg                      ← 知识层级概览图
+    ├── features.svg                  ← 核心特性展示
+    └── knowledge-graph.png           ← 知识图谱截图
 ```
 
 **零外部依赖** — 纯 Python 标准库（sqlite3 + json + os）。
